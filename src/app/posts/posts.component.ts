@@ -2,8 +2,8 @@ import { Component, DestroyRef, inject, OnInit, output, signal } from '@angular/
 import { PostComponent } from './post/post.component';
 import { Post } from './post.model';
 import { PostsService } from './posts.service';
-import { FilterPostsComponent } from './filter-posts/filter-posts.component';
-import { PaginationComponent } from './pagination/pagination.component';
+import { FilterPostsComponent } from '../filter/filter.component';
+import { PaginationComponent } from '../pagination/pagination.component';
 
 const SHOW_COUNT = 6;
 

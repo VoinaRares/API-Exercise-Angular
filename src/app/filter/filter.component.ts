@@ -4,8 +4,8 @@ import { Component, input, output, signal } from '@angular/core';
   selector: 'app-filter-posts',
   standalone: true,
   imports: [],
-  templateUrl: './filter-posts.component.html',
-  styleUrl: './filter-posts.component.css',
+  templateUrl: './filter.component.html',
+  styleUrl: './filter.component.css',
 })
 export class FilterPostsComponent{
   authors = input.required<string[] | undefined>();
