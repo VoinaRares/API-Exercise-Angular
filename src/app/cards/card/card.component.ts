@@ -1,5 +1,5 @@
 import { Component, Input, signal } from '@angular/core';
-import type { Post } from '../post.model';
+import type { Post } from '../card.model';
 
 @Component({
   selector: 'app-post',

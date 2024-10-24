@@ -1,6 +1,6 @@
 import { Component, DestroyRef, inject, OnInit, output, signal } from '@angular/core';
 import { PostComponent } from './card/card.component';
-import { Post } from './post.model';
+import { Post } from './card.model';
 import { PostsService } from './posts.service';
 import { FilterPostsComponent } from '../filter/filter.component';
 import { PaginationComponent } from '../pagination/pagination.component';
@@ -11,8 +11,8 @@ const SHOW_COUNT = 6;
   selector: 'app-posts',
   standalone: true,
   imports: [PostComponent, FilterPostsComponent, PaginationComponent],
-  templateUrl: './posts.component.html',
-  styleUrl: './posts.component.css',
+  templateUrl: './cards.component.html',
+  styleUrl: './cards.component.css',
 })
 export class PostsComponent implements OnInit {
   posts = signal<Post[] | undefined>(undefined);

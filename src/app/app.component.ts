@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { PostsComponent } from "./posts/posts.component";
+import { PostsComponent } from "./cards/cards.component";
 
 @Component({
   selector: 'app-root',
