@@ -5,8 +5,8 @@ import type { Post } from '../post.model';
   selector: 'app-post',
   standalone: true,
   imports: [],
-  templateUrl: './post.component.html',
-  styleUrl: './post.component.css'
+  templateUrl: './card.component.html',
+  styleUrl: './card.component.css'
 })
 export class PostComponent {
   @Input({required: true}) postData! :Post;

@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, output, signal } from '@angular/core';
-import { PostComponent } from './post/post.component';
+import { PostComponent } from './card/card.component';
 import { Post } from './post.model';
 import { PostsService } from './posts.service';
 import { FilterPostsComponent } from '../filter/filter.component';
