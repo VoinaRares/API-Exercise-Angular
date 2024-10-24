@@ -1,0 +1,9 @@
+<div>
+  @if(pageNumber > 1){
+    <a (click)="onPageChange(-1)"> prev </a>
+  }
+  <p> {{pageNumber}} </p>
+  @if(pageNumber < maxPages){
+    <a (click)="onPageChange(1)"> next </a>
+  }
+</div>

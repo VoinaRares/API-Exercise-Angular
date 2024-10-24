@@ -1,0 +1,7 @@
+<label for="authorDropDown">Author</label>
+<select #author (change)="onSelectAuthor(author.value)" name="authorDropDown" id="authorDropDown">
+  <option value=""> All</option>
+  @for(author of authors(); track author){
+    <option [value]="author"> {{author}}</option>
+  }
+</select>

@@ -1,0 +1,9 @@
+label{
+  display: block;
+}
+
+#authorDropDown{
+  width: auto;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
