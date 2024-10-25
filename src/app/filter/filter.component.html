@@ -1,7 +1,7 @@
-<label for="authorDropDown">Author</label>
-<select #author (change)="onSelectAuthor(author.value)" name="authorDropDown" id="authorDropDown">
+<label for="dropDown">Select an Option: </label>
+<select #option (change)="onSelectOption(option.value)" id="dropDown">
   <option value=""> All</option>
-  @for(author of authors(); track author){
-    <option [value]="author"> {{author}}</option>
+  @for(option of options(); track option){
+    <option [value]="option"> {{option}}</option>
   }
 </select>

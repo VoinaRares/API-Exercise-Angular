@@ -1,8 +1,8 @@
-<div class="posts">
-  <app-filter-posts (select)="onChangeFilter($event)" [authors]="authors()"/>
+<div class="cards">
+  <app-filter (select)="onChangeFilter($event)" [options]="authors()"/>
   <div class="container">
-    @for(post of filteredPosts(); track post.id ){
-    <app-post [postData]="post"/>
+    @for(card of filteredCards(); track card.id ){
+    <app-card [cardData]="card"/>
     }
   </div>
   <app-pagination [maxPages]="maxPages" [pageNumber]="currentPage" (pageOutput)="onChangePage($event)"/>

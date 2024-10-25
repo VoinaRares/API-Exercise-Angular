@@ -1,25 +1,26 @@
 import { Component, DestroyRef, inject, OnInit, output, signal } from '@angular/core';
-import { PostComponent } from './card/card.component';
-import { Post } from './card.model';
-import { PostsService } from './posts.service';
-import { FilterPostsComponent } from '../filter/filter.component';
+import { CardComponent } from './card/card.component';
+import { CardsService } from './cards.service';
+import { FilterComponent } from '../filter/filter.component';
 import { PaginationComponent } from '../pagination/pagination.component';
 
-const SHOW_COUNT = 6;
+import type { Card } from './card.model';
+
+const MAX_CARDS_PER_PAGE = 6;
 
 @Component({
-  selector: 'app-posts',
+  selector: 'app-cards',
   standalone: true,
-  imports: [PostComponent, FilterPostsComponent, PaginationComponent],
+  imports: [CardComponent, FilterComponent, PaginationComponent],
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.css',
 })
-export class PostsComponent implements OnInit {
-  posts = signal<Post[] | undefined>(undefined);
-  filteredPosts = signal<Post[] | undefined>(undefined);
+export class CardsComponent implements OnInit {
+  cards = signal<Card[] | undefined>(undefined);
+  filteredCards = signal<Card[] | undefined>(undefined);
   authors = signal<string[] | undefined>(undefined);
 
-  private postsService = inject(PostsService);
+  private cardsService = inject(CardsService);
   private destroyRef = inject(DestroyRef);
 
   changedFilter = output<number>();
@@ -28,27 +29,26 @@ export class PostsComponent implements OnInit {
   currentFilter = '';
   maxPages = 1;
 
-  private changeMaxPages(postAmount: number){
-    console.log(postAmount);
-    console.log(postAmount / SHOW_COUNT);
-    if(Math.floor(postAmount / SHOW_COUNT) === postAmount / SHOW_COUNT){
-      this.maxPages = postAmount / SHOW_COUNT;
+  private changeMaxPages(cardAmount: number){
+    if(Math.floor(cardAmount / MAX_CARDS_PER_PAGE) === cardAmount / MAX_CARDS_PER_PAGE){
+      this.maxPages = cardAmount / MAX_CARDS_PER_PAGE;
     }
     else{
-      this.maxPages = Math.floor(postAmount / SHOW_COUNT) + 1;
+      this.maxPages = Math.floor(cardAmount / MAX_CARDS_PER_PAGE) + 1;
     }
   }
 
   ngOnInit(): void {
-    const subscription = this.postsService.loadPostsData().subscribe({
-      next: (posts) => {
-        this.posts.set(posts);
-        this.filteredPosts.set(posts.slice(0, SHOW_COUNT));
-        this.changeMaxPages(posts.length);
+    const subscription = this.cardsService.loadCardsData().subscribe({
+      next: (cards) => {
+        console.log(cards);
+        this.cards.set(cards);
+        this.filteredCards.set(cards.slice(0, MAX_CARDS_PER_PAGE));
+        this.changeMaxPages(cards.length);
         this.authors.set([
           ...new Set(
-            posts.map((post) => {
-              return post.author;
+            cards.map((card) => {
+              return card.author;
             })
           ),
         ]);
@@ -62,37 +62,37 @@ export class PostsComponent implements OnInit {
   onChangeFilter(newFilter: string) {
     if (newFilter !== '') {
       this.currentFilter = newFilter;
-      this.filteredPosts.set(
-        this.posts()
-          ?.filter((post) => {
-            return post.author === this.currentFilter;
+      this.filteredCards.set(
+        this.cards()
+          ?.filter((card) => {
+            return card.author === this.currentFilter;
           })
       );
-      this.changeMaxPages(this.filteredPosts()!.length);
-      this.filteredPosts.set(this.filteredPosts()?.slice(0, SHOW_COUNT));
+      this.changeMaxPages(this.filteredCards()!.length);
+      this.filteredCards.set(this.filteredCards()?.slice(0, MAX_CARDS_PER_PAGE));
     } else {
-      this.filteredPosts.set(this.posts());
-      this.changeMaxPages(this.filteredPosts()!.length);
-      this.filteredPosts.set(this.filteredPosts()?.slice(0, SHOW_COUNT))
+      this.filteredCards.set(this.cards());
+      this.changeMaxPages(this.filteredCards()!.length);
+      this.filteredCards.set(this.filteredCards()?.slice(0, MAX_CARDS_PER_PAGE))
       this.currentFilter = '';
     }
     this.currentPage = 1;
   }
 
   onChangePage(newPageNumber: number) {
-    let filtered = this.posts();
+    let filtered = this.cards();
     this.currentPage = newPageNumber;
 
     if (this.currentFilter !== '') {
-      filtered = filtered?.filter((post) => {
-        return post.author === this.currentFilter;
+      filtered = filtered?.filter((card) => {
+        return card.author === this.currentFilter;
       });
     }
 
-    this.filteredPosts.set(
+    this.filteredCards.set(
       filtered?.slice(
-        (this.currentPage - 1) * SHOW_COUNT,
-        this.currentPage * SHOW_COUNT
+        (this.currentPage - 1) * MAX_CARDS_PER_PAGE,
+        this.currentPage * MAX_CARDS_PER_PAGE
       )
     );
   }

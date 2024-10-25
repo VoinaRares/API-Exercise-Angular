@@ -1,4 +1,4 @@
-export type Post = {
+export type Card = {
   id: string,
   author: string,
   width: number,

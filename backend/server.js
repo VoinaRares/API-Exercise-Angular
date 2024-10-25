@@ -18,12 +18,12 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/posts", async (req, res) => {
-  const fileContent = await fs.readFile("./data/posts.json");
+app.get("/cards", async (req, res) => {
+  const fileContent = await fs.readFile("./data/cards.json");
 
-  const postsData = JSON.parse(fileContent);
+  const cardsData = JSON.parse(fileContent);
 
-  res.status(200).json({ posts: postsData });
+  res.status(200).json(cardsData);
 });
 
 app.use((req, res, next) => {

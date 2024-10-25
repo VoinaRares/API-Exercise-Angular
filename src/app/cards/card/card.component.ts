@@ -1,13 +1,13 @@
 import { Component, Input, signal } from '@angular/core';
-import type { Post } from '../card.model';
+import type { Card } from '../card.model';
 
 @Component({
-  selector: 'app-post',
+  selector: 'app-card',
   standalone: true,
   imports: [],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css'
 })
-export class PostComponent {
-  @Input({required: true}) postData! :Post;
+export class CardComponent {
+  @Input({required: true}) cardData! :Card;
 }
