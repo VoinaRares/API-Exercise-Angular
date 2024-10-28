@@ -1,99 +1,47 @@
-import { Component, DestroyRef, inject, OnInit, output, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { CardComponent } from './card/card.component';
 import { CardsService } from './cards.service';
 import { FilterComponent } from '../filter/filter.component';
 import { PaginationComponent } from '../pagination/pagination.component';
-
-import type { Card } from './card.model';
-
-const MAX_CARDS_PER_PAGE = 6;
 
 @Component({
   selector: 'app-cards',
   standalone: true,
   imports: [CardComponent, FilterComponent, PaginationComponent],
   templateUrl: './cards.component.html',
-  styleUrl: './cards.component.css',
+  styleUrls: ['./cards.component.css'],
 })
 export class CardsComponent implements OnInit {
-  cards = signal<Card[] | undefined>(undefined);
-  filteredCards = signal<Card[] | undefined>(undefined);
-  authors = signal<string[] | undefined>(undefined);
-
   private cardsService = inject(CardsService);
   private destroyRef = inject(DestroyRef);
 
-  changedFilter = output<number>();
+  filteredCards = this.cardsService.filteredCards;
+  maxPages = this.cardsService.maxPages;
+  currentPage = this.cardsService.currentPage;
 
-  currentPage = 1;
-  currentFilter = '';
-  maxPages = 1;
+  authors = signal<string[]>([]);
 
-  private changeMaxPages(cardAmount: number){
-    if(Math.floor(cardAmount / MAX_CARDS_PER_PAGE) === cardAmount / MAX_CARDS_PER_PAGE){
-      this.maxPages = cardAmount / MAX_CARDS_PER_PAGE;
-    }
-    else{
-      this.maxPages = Math.floor(cardAmount / MAX_CARDS_PER_PAGE) + 1;
-    }
-  }
-
+  // Establishes subscription between service and component
   ngOnInit(): void {
-    const subscription = this.cardsService.loadCardsData().subscribe({
+    const cardsSubscription = this.cardsService.loadCards().subscribe({
       next: (cards) => {
-        console.log(cards);
-        this.cards.set(cards);
-        this.filteredCards.set(cards.slice(0, MAX_CARDS_PER_PAGE));
-        this.changeMaxPages(cards.length);
-        this.authors.set([
-          ...new Set(
-            cards.map((card) => {
-              return card.author;
-            })
-          ),
-        ]);
+        this.authors.set([...new Set(cards.map(card => card.author))]);
       },
+      error: (error) =>{
+        console.error(error);
+      }
     });
+
     this.destroyRef.onDestroy(() => {
-      subscription.unsubscribe();
+      cardsSubscription.unsubscribe();
     });
   }
 
   onChangeFilter(newFilter: string) {
-    if (newFilter !== '') {
-      this.currentFilter = newFilter;
-      this.filteredCards.set(
-        this.cards()
-          ?.filter((card) => {
-            return card.author === this.currentFilter;
-          })
-      );
-      this.changeMaxPages(this.filteredCards()!.length);
-      this.filteredCards.set(this.filteredCards()?.slice(0, MAX_CARDS_PER_PAGE));
-    } else {
-      this.filteredCards.set(this.cards());
-      this.changeMaxPages(this.filteredCards()!.length);
-      this.filteredCards.set(this.filteredCards()?.slice(0, MAX_CARDS_PER_PAGE))
-      this.currentFilter = '';
-    }
-    this.currentPage = 1;
+    this.cardsService.updateFilter(newFilter);
   }
 
   onChangePage(newPageNumber: number) {
-    let filtered = this.cards();
-    this.currentPage = newPageNumber;
-
-    if (this.currentFilter !== '') {
-      filtered = filtered?.filter((card) => {
-        return card.author === this.currentFilter;
-      });
-    }
-
-    this.filteredCards.set(
-      filtered?.slice(
-        (this.currentPage - 1) * MAX_CARDS_PER_PAGE,
-        this.currentPage * MAX_CARDS_PER_PAGE
-      )
-    );
+    this.cardsService.updatePage(newPageNumber);
   }
 }

@@ -5,5 +5,5 @@
     <app-card [cardData]="card"/>
     }
   </div>
-  <app-pagination [maxPages]="maxPages" [pageNumber]="currentPage" (pageOutput)="onChangePage($event)"/>
+  <app-pagination [maxPages]="maxPages()" [pageNumber]="currentPage()" (pageOutput)="onChangePage($event)"/>
 </div>
